@@ -1,0 +1,4 @@
+/bin/*
+/dbdata
+/debug.log
+/wppserver

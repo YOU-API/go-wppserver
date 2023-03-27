@@ -1,0 +1,1448 @@
+{
+	"info": {
+		"_postman_id": "d8b1b3d7-49de-45e5-8a5b-66a7f09549fd",
+		"name": "go-wppserver",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Get Token",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "username",
+									"value": "{{root_username}}",
+									"type": "default"
+								},
+								{
+									"key": "password",
+									"value": "{{root_password}}",
+									"type": "default"
+								}
+							],
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{server}}{{version}}/auth",
+							"host": [
+								"{{server}}{{version}}"
+							],
+							"path": [
+								"auth"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Refresh Token",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Ijg4MDUwNDgyLTY0NzQtMTFlZC04NWE1LTUwYjdjMzAwODQzMyIsImV4cCI6MTY3MzIxMDM5NH0.6IBvKWQttUXegRFtVhjpV33FgqoJT7AMyc-nCwmrWT8",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{server}}{{version}}/auth/refresh",
+							"host": [
+								"{{server}}{{version}}"
+							],
+							"path": [
+								"auth",
+								"refresh"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "User",
+			"item": [
+				{
+					"name": "Register User",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"strictSSL": false,
+						"followRedirects": false
+					},
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Name\": \"{{$randomUserName}}\",\r\n    \"Email\": \"{{$randomEmail}}\",\r\n    \"Password\": \"{{$randomEmail}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{server}}{{version}}/user",
+							"host": [
+								"{{server}}{{version}}"
+							],
+							"path": [
+								"user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get User",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "tokenType",
+									"value": "",
+									"type": "string"
+								},
+								{
+									"key": "tokenName",
+									"value": "",
+									"type": "string"
+								},
+								{
+									"key": "client_authentication",
+									"value": "body",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "accessTokenUrl",
+									"value": "{{server}}{{version}}/user/login",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "{{root_username}}",
+									"type": "string"
+								},
+								{
+									"key": "password",
+									"value": "{{root_password}}",
+									"type": "string"
+								},
+								{
+									"key": "grant_type",
+									"value": "password_credentials",
+									"type": "string"
+								},
+								{
+									"key": "headerPrefix",
+									"value": "",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Id\": \"294ee574-8f8a-11ed-a0e9-50b7c3008433\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{server}}{{version}}/user",
+							"host": [
+								"{{server}}{{version}}"
+							],
+							"path": [
+								"user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update User",
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "tokenType",
+									"value": "",
+									"type": "string"
+								},
+								{
+									"key": "accessToken",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Ijg4MDUwNDgyLTY0NzQtMTFlZC04NWE1LTUwYjdjMzAwODQzMyIsImV4cCI6MTY3MzIxODYzNH0.FUQKIzFJQg9L5flfHjID8g1Bli9BOpC22FIq9RgnoUE",
+									"type": "string"
+								},
+								{
+									"key": "tokenName",
+									"value": "access_token",
+									"type": "string"
+								},
+								{
+									"key": "client_authentication",
+									"value": "body",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "accessTokenUrl",
+									"value": "{{server}}{{version}}/user/login",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "{{root_username}}",
+									"type": "string"
+								},
+								{
+									"key": "password",
+									"value": "{{root_password}}",
+									"type": "string"
+								},
+								{
+									"key": "grant_type",
+									"value": "password_credentials",
+									"type": "string"
+								},
+								{
+									"key": "headerPrefix",
+									"value": "",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "\t{\r\n\t\t\"Id\": \"{{root_id}}\",\r\n\t\t\"Name\": \"root\",\r\n\t\t\"Email\": \"root@example.com\",\r\n\t\t\"Status\": \"enabled\",\r\n\t\t\"Type\": \"admin\"\r\n\t}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{server}}{{version}}/user",
+							"host": [
+								"{{server}}{{version}}"
+							],
+							"path": [
+								"user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete User",
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "tokenType",
+									"value": "",
+									"type": "string"
+								},
+								{
+									"key": "tokenName",
+									"value": "",
+									"type": "string"
+								},
+								{
+									"key": "client_authentication",
+									"value": "body",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "accessTokenUrl",
+									"value": "{{server}}{{version}}/user/login",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "{{root_username}}",
+									"type": "string"
+								},
+								{
+									"key": "password",
+									"value": "{{root_password}}",
+									"type": "string"
+								},
+								{
+									"key": "grant_type",
+									"value": "password_credentials",
+									"type": "string"
+								},
+								{
+									"key": "headerPrefix",
+									"value": "",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Id\": \"4b09e890-8f8f-11ed-a5a6-50b7c3008433\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{server}}{{version}}/user",
+							"host": [
+								"{{server}}{{version}}"
+							],
+							"path": [
+								"user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Password User",
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "tokenType",
+									"value": "",
+									"type": "string"
+								},
+								{
+									"key": "accessToken",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Ijg4MDUwNDgyLTY0NzQtMTFlZC04NWE1LTUwYjdjMzAwODQzMyIsImV4cCI6MTY3MzIyMTc3MH0.XF9MQ8BqJIuvaYq8tUPhGa8ZSAYklUIPkOChhrAEHVM",
+									"type": "string"
+								},
+								{
+									"key": "tokenName",
+									"value": "AccessToken",
+									"type": "string"
+								},
+								{
+									"key": "client_authentication",
+									"value": "body",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "accessTokenUrl",
+									"value": "{{server}}{{version}}/user/login",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "{{root_username}}",
+									"type": "string"
+								},
+								{
+									"key": "password",
+									"value": "{{root_password}}",
+									"type": "string"
+								},
+								{
+									"key": "grant_type",
+									"value": "password_credentials",
+									"type": "string"
+								},
+								{
+									"key": "headerPrefix",
+									"value": "",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "\t{\r\n\t\t\"Id\": \"{{root_id}}\",\r\n\t\t\"OldPassword\": \"{{root_password}}\",\r\n\t\t\"NewPassword\": \"123\"\r\n\t}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{server}}{{version}}/user/password",
+							"host": [
+								"{{server}}{{version}}"
+							],
+							"path": [
+								"user",
+								"password"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Status User",
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "tokenType",
+									"value": "",
+									"type": "string"
+								},
+								{
+									"key": "accessToken",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Ijg4MDUwNDgyLTY0NzQtMTFlZC04NWE1LTUwYjdjMzAwODQzMyIsImV4cCI6MTY3MzIxODkwNX0.17vabqnuiFbN75I8HvfPu1gy-oj_L8Rr8BA1XG0ABFk",
+									"type": "string"
+								},
+								{
+									"key": "tokenName",
+									"value": "access_token",
+									"type": "string"
+								},
+								{
+									"key": "client_authentication",
+									"value": "body",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "accessTokenUrl",
+									"value": "{{server}}{{version}}/user/login",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "{{root_username}}",
+									"type": "string"
+								},
+								{
+									"key": "password",
+									"value": "{{root_password}}",
+									"type": "string"
+								},
+								{
+									"key": "grant_type",
+									"value": "password_credentials",
+									"type": "string"
+								},
+								{
+									"key": "headerPrefix",
+									"value": "",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "\t{\r\n\t\t\"Id\": \"{{root_id}}\",\r\n\t\t\"Status\": \"disabled\"\r\n\t}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{server}}{{version}}/user/status",
+							"host": [
+								"{{server}}{{version}}"
+							],
+							"path": [
+								"user",
+								"status"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Users",
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "tokenType",
+									"value": "",
+									"type": "string"
+								},
+								{
+									"key": "accessToken",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Ijg4MDUwNDgyLTY0NzQtMTFlZC04NWE1LTUwYjdjMzAwODQzMyIsImV4cCI6MTY3MzIyNDA4Mn0.KYpx4F4-wDiW682ktV35BTgBPcCjKkAKUpnXwH5QC4g",
+									"type": "string"
+								},
+								{
+									"key": "tokenName",
+									"value": "",
+									"type": "string"
+								},
+								{
+									"key": "client_authentication",
+									"value": "body",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "accessTokenUrl",
+									"value": "{{server}}{{version}}/user/login",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "{{root_username}}",
+									"type": "string"
+								},
+								{
+									"key": "password",
+									"value": "{{root_password}}",
+									"type": "string"
+								},
+								{
+									"key": "grant_type",
+									"value": "password_credentials",
+									"type": "string"
+								},
+								{
+									"key": "headerPrefix",
+									"value": "",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{server}}{{version}}/users",
+							"host": [
+								"{{server}}{{version}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Find Users",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "tokenType",
+									"value": "",
+									"type": "string"
+								},
+								{
+									"key": "accessToken",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Ijg4MDUwNDgyLTY0NzQtMTFlZC04NWE1LTUwYjdjMzAwODQzMyIsImV4cCI6MTY3MzIyNDA4Mn0.KYpx4F4-wDiW682ktV35BTgBPcCjKkAKUpnXwH5QC4g",
+									"type": "string"
+								},
+								{
+									"key": "tokenName",
+									"value": "",
+									"type": "string"
+								},
+								{
+									"key": "client_authentication",
+									"value": "body",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "accessTokenUrl",
+									"value": "{{server}}{{version}}/user/login",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "{{root_username}}",
+									"type": "string"
+								},
+								{
+									"key": "password",
+									"value": "{{root_password}}",
+									"type": "string"
+								},
+								{
+									"key": "grant_type",
+									"value": "password_credentials",
+									"type": "string"
+								},
+								{
+									"key": "headerPrefix",
+									"value": "",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"keyword\" : \"hotmail\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{server}}{{version}}/users/findusers",
+							"host": [
+								"{{server}}{{version}}"
+							],
+							"path": [
+								"users",
+								"findusers"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "API Key",
+			"item": [
+				{
+					"name": "Create User Key",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"strictSSL": false,
+						"followRedirects": false
+					},
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "tokenType",
+									"value": "",
+									"type": "string"
+								},
+								{
+									"key": "accessToken",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Ijg4MDUwNDgyLTY0NzQtMTFlZC04NWE1LTUwYjdjMzAwODQzMyIsImV4cCI6MTY3MzM2OTQ3N30.zwmjePbzUHCAx6e9ro7zlTOxXasCMyfbqFENe4jZrvY",
+									"type": "string"
+								},
+								{
+									"key": "tokenName",
+									"value": "",
+									"type": "string"
+								},
+								{
+									"key": "client_authentication",
+									"value": "body",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "accessTokenUrl",
+									"value": "{{server}}{{version}}/user/login",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "{{root_username}}",
+									"type": "string"
+								},
+								{
+									"key": "password",
+									"value": "{{root_password}}",
+									"type": "string"
+								},
+								{
+									"key": "grant_type",
+									"value": "password_credentials",
+									"type": "string"
+								},
+								{
+									"key": "headerPrefix",
+									"value": "",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"UserId\": \"{{root_id}}\",\r\n    \"Description\": \"V api key\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{server}}{{version}}/user/key",
+							"host": [
+								"{{server}}{{version}}"
+							],
+							"path": [
+								"user",
+								"key"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get User Keys",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "tokenType",
+									"value": "",
+									"type": "string"
+								},
+								{
+									"key": "accessToken",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Ijg4MDUwNDgyLTY0NzQtMTFlZC04NWE1LTUwYjdjMzAwODQzMyIsImV4cCI6MTY3MzIyNDA4Mn0.KYpx4F4-wDiW682ktV35BTgBPcCjKkAKUpnXwH5QC4g",
+									"type": "string"
+								},
+								{
+									"key": "tokenName",
+									"value": "",
+									"type": "string"
+								},
+								{
+									"key": "client_authentication",
+									"value": "body",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "accessTokenUrl",
+									"value": "{{server}}{{version}}/user/login",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "{{root_username}}",
+									"type": "string"
+								},
+								{
+									"key": "password",
+									"value": "{{root_password}}",
+									"type": "string"
+								},
+								{
+									"key": "grant_type",
+									"value": "password_credentials",
+									"type": "string"
+								},
+								{
+									"key": "headerPrefix",
+									"value": "",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Id\": \"{{root_id}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{server}}{{version}}/user/key",
+							"host": [
+								"{{server}}{{version}}"
+							],
+							"path": [
+								"user",
+								"key"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete User Key",
+					"request": {
+						"auth": {
+							"type": "oauth2",
+							"oauth2": [
+								{
+									"key": "tokenType",
+									"value": "",
+									"type": "string"
+								},
+								{
+									"key": "accessToken",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Ijg4MDUwNDgyLTY0NzQtMTFlZC04NWE1LTUwYjdjMzAwODQzMyIsImV4cCI6MTY3MzIyNDA4Mn0.KYpx4F4-wDiW682ktV35BTgBPcCjKkAKUpnXwH5QC4g",
+									"type": "string"
+								},
+								{
+									"key": "tokenName",
+									"value": "",
+									"type": "string"
+								},
+								{
+									"key": "client_authentication",
+									"value": "body",
+									"type": "string"
+								},
+								{
+									"key": "addTokenTo",
+									"value": "header",
+									"type": "string"
+								},
+								{
+									"key": "accessTokenUrl",
+									"value": "{{server}}{{version}}/user/login",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "{{root_username}}",
+									"type": "string"
+								},
+								{
+									"key": "password",
+									"value": "{{root_password}}",
+									"type": "string"
+								},
+								{
+									"key": "grant_type",
+									"value": "password_credentials",
+									"type": "string"
+								},
+								{
+									"key": "headerPrefix",
+									"value": "",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Id\": \"76c478f2-910d-11ed-99ae-50b7c3008433\",\r\n    \"UserId\": \"{{root_id}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{server}}{{version}}/user/key",
+							"host": [
+								"{{server}}{{version}}"
+							],
+							"path": [
+								"user",
+								"key"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Device",
+			"item": [
+				{
+					"name": "Login Device",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "cs_9b2a9061000d45a2888b411807fe8c5e",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "ck_1137be37867c403fa9d4f4c81fcb48e0",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{server}}{{version}}/device/login",
+							"host": [
+								"{{server}}{{version}}"
+							],
+							"path": [
+								"device",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Logout Device",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "cs_9b2a9061000d45a2888b411807fe8c5e",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "ck_1137be37867c403fa9d4f4c81fcb48e0",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{server}}{{version}}/device/logout",
+							"host": [
+								"{{server}}{{version}}"
+							],
+							"path": [
+								"device",
+								"logout"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Session",
+			"item": [
+				{
+					"name": "Status Session",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "cs_9b2a9061000d45a2888b411807fe8c5e",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "ck_1137be37867c403fa9d4f4c81fcb48e0",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{server}}{{version}}/session/status",
+							"host": [
+								"{{server}}{{version}}"
+							],
+							"path": [
+								"session",
+								"status"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Connect Session",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "cs_9b2a9061000d45a2888b411807fe8c5e",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "ck_1137be37867c403fa9d4f4c81fcb48e0",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{server}}{{version}}/session/connect",
+							"host": [
+								"{{server}}{{version}}"
+							],
+							"path": [
+								"session",
+								"connect"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Disconnect Session",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "cs_9b2a9061000d45a2888b411807fe8c5e",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "ck_1137be37867c403fa9d4f4c81fcb48e0",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{server}}{{version}}/session/disconnect",
+							"host": [
+								"{{server}}{{version}}"
+							],
+							"path": [
+								"session",
+								"disconnect"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Send",
+			"item": [
+				{
+					"name": "Send Text",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "cs_9b2a9061000d45a2888b411807fe8c5e",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "ck_1137be37867c403fa9d4f4c81fcb48e0",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Phone\": \"+5511932486442\",\r\n    \"Body\": \"{{$randomLoremText}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{server}}{{version}}/chat/send/text",
+							"host": [
+								"{{server}}{{version}}"
+							],
+							"path": [
+								"chat",
+								"send",
+								"text"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Send Image",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "cs_9b2a9061000d45a2888b411807fe8c5e",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "ck_1137be37867c403fa9d4f4c81fcb48e0",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Phone\": \"+5511932486442\",\r\n    \"Body\": \"{{$randomLoremText}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{server}}{{version}}/chat/send/text",
+							"host": [
+								"{{server}}{{version}}"
+							],
+							"path": [
+								"chat",
+								"send",
+								"text"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Send Document",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "cs_9b2a9061000d45a2888b411807fe8c5e",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "ck_1137be37867c403fa9d4f4c81fcb48e0",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"Phone\": \"+5511932486442\",\r\n    \"FileName\": \"My file.zip\",\r\n    \"Document\": \"data:application/zip;base64,UEsDBBQAAAAIAEcLMladeZbNGgAAABgAAAAIAAAAZG93bmxvYWTLyM9JVCgsTeUqSczhSs7PzedKLS5JLOYCAFBLAQIfABQAAAAIAEcLMladeZbNGgAAABgAAAAIACQAAAAAAAAAIAAAAAAAAABkb3dubG9hZAoAIAAAAAAAAQAYAOkgZwD1KtkB6SBnAPUq2QGL/Iv/9CrZAVBLBQYAAAAAAQABAFoAAABAAAAAAAA=\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{server}}{{version}}/chat/send/document",
+							"host": [
+								"{{server}}{{version}}"
+							],
+							"path": [
+								"chat",
+								"send",
+								"document"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Phone",
+			"item": [
+				{
+					"name": "Get Contacts",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "cs_9b2a9061000d45a2888b411807fe8c5e",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "ck_1137be37867c403fa9d4f4c81fcb48e0",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{server}}{{version}}/phone/contacts",
+							"host": [
+								"{{server}}{{version}}"
+							],
+							"path": [
+								"phone",
+								"contacts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Scraping Phones",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "cs_9b2a9061000d45a2888b411807fe8c5e",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "ck_1137be37867c403fa9d4f4c81fcb48e0",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"Phone\": [\r\n    \"5491155553934\",\r\n    \"5491155553935\"\r\n  ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{server}}{{version}}/phone/scraping",
+							"host": [
+								"{{server}}{{version}}"
+							],
+							"path": [
+								"phone",
+								"scraping"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "oauth2",
+		"oauth2": [
+			{
+				"key": "tokenName",
+				"value": "token",
+				"type": "string"
+			},
+			{
+				"key": "challengeAlgorithm",
+				"value": "S256",
+				"type": "string"
+			},
+			{
+				"key": "username",
+				"value": "{{root_username}}",
+				"type": "string"
+			},
+			{
+				"key": "password",
+				"value": "{{root_password}}",
+				"type": "string"
+			},
+			{
+				"key": "grant_type",
+				"value": "password_credentials",
+				"type": "string"
+			},
+			{
+				"key": "addTokenTo",
+				"value": "header",
+				"type": "string"
+			},
+			{
+				"key": "client_authentication",
+				"value": "body",
+				"type": "string"
+			},
+			{
+				"key": "accessTokenUrl",
+				"value": "{{server}}{{version}}/user/login",
+				"type": "string"
+			},
+			{
+				"key": "headerPrefix",
+				"value": "",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "server",
+			"value": "http://localhost:3000/",
+			"type": "default"
+		},
+		{
+			"key": "version",
+			"value": "v1",
+			"type": "default"
+		},
+		{
+			"key": "root_id",
+			"value": "88050482-6474-11ed-85a5-50b7c3008433",
+			"type": "default"
+		},
+		{
+			"key": "root_username",
+			"value": "root@example.com",
+			"type": "default"
+		},
+		{
+			"key": "root_password",
+			"value": "root",
+			"type": "default"
+		}
+	]
+}
