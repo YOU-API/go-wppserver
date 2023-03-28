@@ -94,7 +94,7 @@ func (a *App) DatabaseSetup(config *config.Config) (*sql.DB, error) {
 			&user.Id, &user.Name, &user.Email, &user.Type, &user.Status)
 
 		if err != nil || err == sql.ErrNoRows {
-			stmt, err := db.Prepare("INSERT INTO wppserver_users(id, email, password, type, status) VALUES($1,$2,$3,$4,$5);")
+			stmt, err := db.Prepare("INSERT INTO wppserver_users(id, name, email, password, type, status) VALUES($1,$2,$3,$4,$5,$6);")
 			if err != nil {
 				return nil, err
 			}
@@ -105,7 +105,7 @@ func (a *App) DatabaseSetup(config *config.Config) (*sql.DB, error) {
 				return nil, err
 			}
 
-			result, err := stmt.Exec(user.Id, config.AUTH.UserEmail, user.Password, "admin", "enabled")
+			result, err := stmt.Exec(user.Id, "root", config.AUTH.UserEmail, user.Password, "admin", "enabled")
 			if err != nil && result != nil {
 				return nil, err
 			} else {

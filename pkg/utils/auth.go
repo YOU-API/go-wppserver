@@ -135,10 +135,11 @@ func GetRequestAuth(db *sql.DB, r *http.Request) (model.Auth, bool) {
 	}
 
 	auth := model.Auth{}
-	reqToken := r.Form.Get("access_token")
+	reqToken := r.Header.Get("Authorization")
 
 	userAuthorization, okGetUserFromClaims := GetUserFromClaims(reqToken, db)
 	scopeAuthorization, okGetScopesFromClaims := GetScopeFromClaims(reqToken, db)
+
 	if !okGetUserFromClaims || !okGetScopesFromClaims {
 		return auth, false
 	}
@@ -153,24 +154,24 @@ func GetUserFromClaims(reqToken string, db *sql.DB) (model.User, bool) {
 	user := model.User{}
 
 	claims, okExtractUUID := ExtractClaims(reqToken)
-
 	if !okExtractUUID {
 		return user, false
 	}
 
-	userUUID, errUUID := uuid.Parse(claims["userId"].(string))
+	userUUID, errUUID := uuid.Parse(claims["userid"].(string))
 	if errUUID != nil {
 		return user, false
 	}
 
-	err := db.QueryRow("SELECT * FROM wppserver_users WHERE id=$1", userUUID).Scan(
-		&user.Name, &user.Email, &user.Password, &user.Type, &user.Status, &user.Id)
+	err := db.QueryRow("SELECT id, name, email, password, type, status FROM wppserver_users WHERE id=$1", userUUID).Scan(
+		&user.Id, &user.Name, &user.Email, &user.Password, &user.Type, &user.Status)
 
 	if err != nil {
-		return user, true
+		log.Panicf("query error: %v\n", err)
+		return user, false
 	}
 
-	return user, false
+	return user, true
 }
 
 func GetScopeFromClaims(reqToken string, db *sql.DB) (model.Scope, bool) {
@@ -181,7 +182,7 @@ func GetScopeFromClaims(reqToken string, db *sql.DB) (model.Scope, bool) {
 		return scope, false
 	}
 
-	scope.List = strings.Split(claims["scope"].(string), " ")
+	scope.List = strings.Split(claims["Scope"].(string), " ")
 
 	return scope, true
 }

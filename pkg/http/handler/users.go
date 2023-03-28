@@ -117,21 +117,22 @@ func RegisterUser(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 
 func GetUser(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 	userTarget := model.User{}
-	decoder := json.NewDecoder(r.Body)
+
+	/*decoder := json.NewDecoder(r.Body)
 	if err := decoder.Decode(&userTarget); err != nil {
 		respondError(w, http.StatusBadRequest, err.Error())
 		return
 	}
-	defer r.Body.Close()
+	defer r.Body.Close()*/
 
 	auth, ok := utils.GetRequestAuth(db, r)
-	if !ok || !auth.User.CanAuthorization(userTarget.Id) {
+	if !ok {
 		respondError(w, http.StatusUnauthorized, "Invalid Token")
 		return
 	}
 
 	ctx := context.Background()
-	err := db.QueryRowContext(ctx, "SELECT id, name, email, type, status FROM wppserver_users WHERE id=$1", userTarget.Id).Scan(
+	err := db.QueryRowContext(ctx, "SELECT id, name, email, type, status FROM wppserver_users WHERE id=$1", auth.User.Id).Scan(
 		&userTarget.Id, &userTarget.Name, &userTarget.Email, &userTarget.Type, &userTarget.Status)
 
 	if err != nil {
