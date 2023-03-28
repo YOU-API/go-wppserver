@@ -39,9 +39,7 @@ func GetAllUsers(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 }
 
 func FindUsers(db *sql.DB, w http.ResponseWriter, r *http.Request) {
-	type SearchUser struct {
-		Keyword string `json:"keyword"`
-	}
+	searchKeyword := r.Form.Get("keyword")
 
 	auth, ok := utils.GetRequestAuth(db, r)
 	if !ok || !auth.User.IsAdmin() {
@@ -49,16 +47,8 @@ func FindUsers(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	search := SearchUser{}
-	decoder := json.NewDecoder(r.Body)
-	if err := decoder.Decode(&search); err != nil {
-		respondError(w, http.StatusBadRequest, err.Error())
-		return
-	}
-	defer r.Body.Close()
-
 	ctx := context.Background()
-	rows, err := db.QueryContext(ctx, "SELECT id, name, email, type, status FROM wppserver_users WHERE name LIKE '%' || $1 || '%' OR email LIKE '%' || $1 || '%'", search.Keyword)
+	rows, err := db.QueryContext(ctx, "SELECT id, name, email, type, status FROM wppserver_users WHERE name LIKE '%' || $1 || '%' OR email LIKE '%' || $1 || '%'", searchKeyword)
 	if err != nil {
 		respondJSON(w, http.StatusInternalServerError, err.Error())
 		return
