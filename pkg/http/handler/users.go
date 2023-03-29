@@ -9,6 +9,7 @@ import (
 
 	uuid "github.com/google/uuid"
 
+	"wppserver/pkg/config"
 	"wppserver/pkg/http/model"
 	"wppserver/pkg/utils"
 )
@@ -65,8 +66,8 @@ func FindUsers(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 	respondJSON(w, http.StatusOK, users)
 }
 
-func RegisterUser(db *sql.DB, w http.ResponseWriter, r *http.Request) {
-	user := model.User{}
+func RegisterUser(db *sql.DB, w http.ResponseWriter, r *http.Request, config *config.Config) {
+	user := model.User{Status: "disabled"}
 
 	decoder := json.NewDecoder(r.Body)
 	if err := decoder.Decode(&user); err != nil {
@@ -75,7 +76,7 @@ func RegisterUser(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 	}
 	defer r.Body.Close()
 
-	stmt, err := db.Prepare("INSERT INTO wppserver_users(id, name, email, password, type) VALUES($1,$2,$3,$4,$5);")
+	stmt, err := db.Prepare("INSERT INTO wppserver_users(id, name, email, password, type, status) VALUES($1,$2,$3,$4,$5,$6);")
 	if err != nil {
 		log.Panic(err)
 	}
@@ -87,7 +88,13 @@ func RegisterUser(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 		log.Panic(err)
 	}
 
-	result, err := stmt.Exec(uuid, user.Name, user.Email, userPassword, "agent")
+	if config.SETTINGS.NewUsersStatus == "ENABLED" {
+		user.Status = "enabled"
+	} else {
+		user.Status = "disabled"
+	}
+
+	result, err := stmt.Exec(uuid, user.Name, user.Email, userPassword, "agent", user.Status)
 	if err != nil && result != nil {
 		log.Panic(err)
 	}
@@ -102,7 +109,7 @@ func RegisterUser(db *sql.DB, w http.ResponseWriter, r *http.Request) {
 	}
 
 	log.Printf("User registed %q\n", user.Email)
-	respondJSON(w, http.StatusCreated, user)
+	respondJSON(w, http.StatusOK, user)
 }
 
 func GetUser(db *sql.DB, w http.ResponseWriter, r *http.Request) {

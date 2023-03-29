@@ -24,6 +24,7 @@ type App struct {
 	DB      *sql.DB
 	Router  *mux.Router
 	Devices *whatsapp.Devices
+	Config  *config.Config
 }
 
 // App initialize with predefined configuration
@@ -34,6 +35,7 @@ func (a *App) Initialize(config *config.Config) error {
 		return err
 	}
 
+	a.Config = config
 	a.Devices = whatsapp.NewDevices()
 	a.connectDevices()
 	a.Router = mux.NewRouter()
@@ -170,6 +172,8 @@ func (a *App) connectDevices() {
 
 // Set all required routers
 func (a *App) setRouters() {
+	a.Docs("/docs")
+
 	a.Post("/v1/auth", a.accessToken)
 	a.Get("/v1/auth/refresh", a.refreshToken)
 
@@ -205,6 +209,11 @@ func (a *App) setRouters() {
 
 	a.Post("/v1/phone/scraping", a.scrapingPhones)
 	a.Get("/v1/phone/contacts", a.getContacts)
+}
+
+// Show application docs
+func (a *App) Docs(path string) {
+	a.Router.PathPrefix(path).Handler(http.StripPrefix(path, http.FileServer(http.Dir("./docs/"))))
 }
 
 // Wrap the router for GET method

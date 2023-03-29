@@ -136,7 +136,10 @@ func GetRequestAuth(db *sql.DB, r *http.Request) (model.Auth, bool) {
 
 	auth := model.Auth{}
 	reqToken := r.Header.Get("Authorization")
-
+	splitToken := strings.Split(reqToken, "Bearer ")
+	if len(splitToken) > 1 {
+		reqToken = splitToken[1]
+	}
 	userAuthorization, okGetUserFromClaims := GetUserFromClaims(reqToken, db)
 	scopeAuthorization, okGetScopesFromClaims := GetScopeFromClaims(reqToken, db)
 

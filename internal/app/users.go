@@ -10,7 +10,7 @@ func (a *App) getAllUsers(w http.ResponseWriter, r *http.Request) {
 }
 
 func (a *App) registerUser(w http.ResponseWriter, r *http.Request) {
-	handler.RegisterUser(a.DB, w, r)
+	handler.RegisterUser(a.DB, w, r, a.Config)
 }
 
 func (a *App) getUser(w http.ResponseWriter, r *http.Request) {

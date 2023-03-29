@@ -8,11 +8,12 @@ import (
 )
 
 type Config struct {
-	DB      DataBase
-	SERVER  Server
-	TLS     Certificate
-	AUTH    Authentication
-	LICENSE License
+	DB       DataBase
+	SERVER   Server
+	TLS      Certificate
+	AUTH     Authentication
+	SETTINGS Settings
+	LICENSE  License
 }
 
 type DataBase struct {
@@ -43,6 +44,10 @@ type License struct {
 	Key string `name:"username" description:"Set your purchase key. Ex. XXXX-XXXX-XXXXX-XXXX"`
 }
 
+type Settings struct {
+	NewUsersStatus string
+}
+
 func GetConfig(input ...string) *Config {
 	if len(input) != 0 && input[0] != "" {
 		err := godotenv.Load(input[0])
@@ -71,6 +76,9 @@ func GetConfig(input ...string) *Config {
 			UserEmail:    os.Getenv("AUTH_INITIAL_EMAIL"),
 			UserPassword: os.Getenv("AUTH_INITIAL_PASSWORD"),
 			SecretKey:    os.Getenv("AUTH_JWT_SECRET"),
+		},
+		SETTINGS: Settings{
+			NewUsersStatus: os.Getenv("NEW_USERS_STATUS"),
 		},
 		LICENSE: License{
 			Key: os.Getenv("LICENSE_KEY"),
