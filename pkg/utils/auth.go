@@ -234,9 +234,9 @@ func GetRequestToken(db *sql.DB, r *http.Request) (string, bool) {
 		}
 
 		if user.IsAdmin() {
-			token = MakeToken(user.Id, "admin:*")
+			token = MakeToken(user.Id, "admin whatsapp")
 		} else {
-			token = MakeToken(user.Id, "user:*")
+			token = MakeToken(user.Id, "agent whatsapp")
 		}
 
 		return token, true

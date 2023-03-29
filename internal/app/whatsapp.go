@@ -3,6 +3,7 @@ package app
 import (
 	"net/http"
 	"wppserver/pkg/http/handler"
+	"wppserver/pkg/whatsapp"
 )
 
 func (a *App) loginDevice(w http.ResponseWriter, r *http.Request) {
@@ -55,4 +56,8 @@ func (a *App) getContacts(w http.ResponseWriter, r *http.Request) {
 
 func (a *App) scrapingPhones(w http.ResponseWriter, r *http.Request) {
 	handler.ScrapingPhones(a.DB, a.Devices, w, r)
+}
+
+func (a *App) webhook(device *whatsapp.Device, rawEvt interface{}) {
+	handler.Webhook(a.DB, device, rawEvt)
 }

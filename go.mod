@@ -12,8 +12,8 @@ require (
 	github.com/mdp/qrterminal/v3 v3.0.0
 	github.com/skip2/go-qrcode v0.0.0-20200617195104-da1b6568686e
 	github.com/vincent-petithory/dataurl v1.0.0
-	go.mau.fi/whatsmeow v0.0.0-20230104001256-9d98dc9b5702
-	golang.org/x/crypto v0.4.0
+	go.mau.fi/whatsmeow v0.0.0-20230324171918-c7e156dca788
+	golang.org/x/crypto v0.5.0
 	google.golang.org/protobuf v1.28.1
 	modernc.org/sqlite v1.19.4
 )
@@ -26,7 +26,7 @@ require (
 	github.com/remyoudompheng/bigfft v0.0.0-20200410134404-eec4a21b6bb0 // indirect
 	go.mau.fi/libsignal v0.1.0 // indirect
 	golang.org/x/mod v0.3.0 // indirect
-	golang.org/x/sys v0.3.0 // indirect
+	golang.org/x/sys v0.4.0 // indirect
 	golang.org/x/tools v0.0.0-20201124115921-2c860bdd6e78 // indirect
 	golang.org/x/xerrors v0.0.0-20200804184101-5ec99f83aff1 // indirect
 	lukechampine.com/uint128 v1.2.0 // indirect

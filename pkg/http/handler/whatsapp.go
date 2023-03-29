@@ -35,13 +35,17 @@ func LoginDevice(db *sql.DB, ds *whatsapp.Devices, w http.ResponseWriter, r *htt
 
 	device, ok = ds.Get(auth.User.Id)
 	if !ok {
-		deviceId, err := uuid.NewUUID()
-		if err != nil {
-			log.Panic(err)
-		}
-		device, ok = ds.RegisterNew(deviceId)
+		// deviceId, err := uuid.NewUUID()
+		// if err != nil {
+		// 	log.Panic(err)
+		// }
+		device, ok = ds.RegisterNew(auth.User.Id)
 		if !ok {
 			log.Panic("Device create error")
+		}
+
+		device.FnUpdateDevice = func(d *whatsapp.Device) {
+			utils.DBUpdateDevice(db, d)
 		}
 
 		stmt, err := db.Prepare("INSERT INTO wppserver_devices(id, userid, jid, Connected) VALUES($1,$2,$3,$4);")
@@ -139,7 +143,7 @@ func LogoutDevice(db *sql.DB, ds *whatsapp.Devices, w http.ResponseWriter, r *ht
 		}
 
 		log.Printf("Logged out: %v\n", device)
-		respondJSON(w, http.StatusOK, nil)
+		respondJSON(w, http.StatusNoContent, nil)
 		return
 	}
 }
@@ -204,6 +208,7 @@ func Connect(db *sql.DB, ds *whatsapp.Devices, w http.ResponseWriter, r *http.Re
 		return
 	}
 
+	utils.DBUpdateDevice(db, device)
 	respondJSON(w, http.StatusNoContent, nil)
 	return
 }
@@ -225,6 +230,7 @@ func Disconnect(db *sql.DB, ds *whatsapp.Devices, w http.ResponseWriter, r *http
 	}
 
 	device.Client.Disconnect()
+	utils.DBUpdateDevice(db, device)
 
 	respondJSON(w, http.StatusNoContent, nil)
 	return
@@ -762,5 +768,48 @@ func GetWebhooks(db *sql.DB, ds *whatsapp.Devices, w http.ResponseWriter, r *htt
 		webhooks = append(webhooks, webhooksData)
 	}
 	respondJSON(w, http.StatusOK, webhooks)
+
+}
+
+// Events from Whatsapp websocket
+func Webhook(db *sql.DB, device *whatsapp.Device, rawEvt interface{}) {
+	rows, err := db.Query("SELECT id, userid, deviceid, description, url, secret, status FROM wppserver_webhooks WHERE userid=$1", device.UserId)
+	if err != nil {
+		log.Panicf("query select error: %v\n", err)
+		return
+	}
+
+	for rows.Next() {
+		var webhooksData model.WebHook
+		if err := rows.Scan(&webhooksData.Id, &webhooksData.UserId, &webhooksData.DeviceId, &webhooksData.Description, &webhooksData.URL, &webhooksData.Secrete, &webhooksData.Status); err != nil {
+			log.Panic(err)
+			return
+		}
+		if webhooksData.Status != "enabled" {
+			continue
+		}
+
+		type PostData struct {
+			Event    string
+			UserID   uuid.UUID
+			DeviceID uuid.UUID
+			State    string
+			Data     model.Message
+		}
+
+		// switch evt := rawEvt.(type) {
+		// case *events.Message:
+		// 	response := PostData{
+		// 		Event:    "Message",
+		// 		UserID:   device.UserId,
+		// 		DeviceID: device.Id,
+		// 	}
+
+		// 	ImageMessage := evt.Message.GetImageMessage()
+		// 	if ImageMessage != nil {
+
+		// 	}
+		// }
+	}
 
 }

@@ -49,11 +49,12 @@ func (a *App) Initialize(config *config.Config) error {
 // Initial database settings
 func (a *App) DatabaseSetup(config *config.Config) (*sql.DB, error) {
 	// Create sqlite default db
-	if config.DB.DbURI == "file:dbdata/wppserver.db?_foreign_keys=true" {
+	if config.DB.DbURI == "file:dbdata/wppserver.db" {
 		path, err := utils.GetWorkDir()
 		if err != nil {
 			return nil, err
 		}
+		log.Printf("Work dir %v", path)
 		if _, err := os.Stat(path + "/dbdata/wppserver.db"); err != nil {
 			zipFile, errDir := assets.F.ReadFile("dbdata.zip")
 			if errDir != nil {
@@ -90,10 +91,9 @@ func (a *App) DatabaseSetup(config *config.Config) (*sql.DB, error) {
 	// Create initial admin user
 	if config.AUTH.UserEmail != "" && config.AUTH.UserPassword != "" {
 		user := model.User{}
-		err := db.QueryRow("SELECT id, name, email, type, status FROM wppserver_users WHERE type=admin").Scan(
+		err := db.QueryRow("SELECT id, name, email, type, status FROM wppserver_users WHERE type='admin'").Scan(
 			&user.Id, &user.Name, &user.Email, &user.Type, &user.Status)
-
-		if err != nil || err == sql.ErrNoRows {
+		if err == sql.ErrNoRows {
 			stmt, err := db.Prepare("INSERT INTO wppserver_users(id, name, email, password, type, status) VALUES($1,$2,$3,$4,$5,$6);")
 			if err != nil {
 				return nil, err
@@ -105,8 +105,8 @@ func (a *App) DatabaseSetup(config *config.Config) (*sql.DB, error) {
 				return nil, err
 			}
 
-			result, err := stmt.Exec(user.Id, "root", config.AUTH.UserEmail, user.Password, "admin", "enabled")
-			if err != nil && result != nil {
+			_, err = stmt.Exec(user.Id, "root", config.AUTH.UserEmail, user.Password, "admin", "enabled")
+			if err != nil {
 				return nil, err
 			} else {
 				log.Printf("Initial admin user registed %q\n", user.Id)
@@ -138,8 +138,12 @@ func (a *App) connectDevices() {
 			log.Fatalf("rows error: %v\n", err)
 		}
 
-		if _, ok := a.Devices.Get(device.Id); !ok {
+		if _, ok := a.Devices.Get(device.UserId); !ok {
 			log.Printf("Connect to Whatsapp on startup:  %v\n", device.Jid)
+
+			device.FnUpdateDevice = func(d *whatsapp.Device) {
+				utils.DBUpdateDevice(a.DB, d)
+			}
 
 			device.FnEvent = a.webhook
 			device.StartClient(a.Devices.Container)
@@ -152,11 +156,8 @@ func (a *App) connectDevices() {
 			if device.Client.Store.ID != nil {
 				a.Devices.Add(&device)
 			} else {
-				_, err := a.DB.Exec("DELETE FROM wppserver_devices WHERE id=$1 AND userid=$2;", device.Id, device.UserId)
-				if err != nil {
-					log.Panicf("query exec error: %v\n", err)
-					return
-				}
+				a.Devices.Remove(device.UserId)
+				utils.DBDeleteDevice(a.DB, &device)
 			}
 		}
 	}

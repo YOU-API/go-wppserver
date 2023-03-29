@@ -30,6 +30,7 @@ type Device struct {
 	Client         *whatsmeow.Client
 	EventHandlerID uint32
 	FnEvent        func(d *Device, rawEvt interface{})
+	FnUpdateDevice func(d *Device)
 }
 
 type dataQrCode struct {
@@ -81,7 +82,7 @@ func (d *Device) StartClient(container *sqlstore.Container) *whatsmeow.Client {
 	var deviceStore *store.Device
 	var err error
 
-	log.Printf("Starting connection to Whatsapp:  %v\n", d.Id)
+	log.Printf("Starting connection to Whatsapp:  %v\n", d.UserId)
 
 	if d.Jid.String() != "" {
 		deviceStore, err = container.GetDevice(d.Jid)
@@ -129,9 +130,10 @@ func (d *Device) eventHandlerDevices(rawEvt interface{}) {
 	case *events.PairSuccess:
 		d.Jid = evt.ID
 		log.Printf("New jid: %v\n", d.Jid)
+		d.FnUpdateDevice(d)
 	}
 
-	d.FnEvent(d, rawEvt)
+	//d.FnEvent(d, rawEvt)
 }
 
 func (d *Device) DisconnectClient() {
