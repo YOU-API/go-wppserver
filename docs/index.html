@@ -256,7 +256,7 @@
 							<h2 id="user-content-api-reference">
 								<a aria-hidden="true" class="anchor" href="#user-content-api-reference" id="user-content-api-reference" name="user-content-api-reference"><span aria-hidden="true" class="octicon octicon-link"></span></a>API reference
 							</h2>
-							<p>After starting the server, the user must make a request to the <code>/auth</code> API endpoint, passing the initial email and password defined in the ".env" file to obtain the <code>access_token</code>.</p>
+							<p>After starting the server, the user must make a request to the <code>/auth</code> API endpoint, passing the initial email and password defined in the ".env" file to obtain the <code>access_token</code>. Optionally you can <a target="_blank" href="./api/#/User/post_user">create a new user</a> and use your email and password in the authentication route to obtain the access_token.</p>
 							<p>Then, the user must make a new request to the <code>/device/login</code> API endpoint to obtain and scan the generated QR Code. To do this, it is necessary to open the WhatsApp application on your mobile device and access the "Devices" menu. Then, point the camera of your mobile device to the QR Code extracted from the request payload and wait for the connection confirmation. After connected, the user can start using the WhatsApp API.</p>
 							<p>API calls should be made with content type json, and parameters sent into the
 								request body, always passing the <code>access_token</code> for authenticating the request.

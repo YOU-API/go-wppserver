@@ -3,14 +3,17 @@ window.onload = function() {
 
   // the following lines will be replaced by docker/configurator, when it runs in a docker-container
   window.ui = SwaggerUIBundle({
-    url: "https://raw.githubusercontent.com/santanamic/go-wppserver-docs/master/openapi.yaml",
+    spec: spec,
     dom_id: '#swagger-ui',
     deepLinking: true,
+    plugins: [
+      SwaggerUIBundle.plugins.DownloadUrl
+    ],
     presets: [
       SwaggerUIBundle.presets.apis,
       SwaggerUIStandalonePreset
     ]
-  });
+});
 
   //</editor-fold>
 };
