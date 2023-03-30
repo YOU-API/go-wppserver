@@ -18,7 +18,7 @@ type Config struct {
 
 type DataBase struct {
 	Host     string `name:"dbhost" description:"Set the http server host." default:"0.0.0.0"`
-	Port     string `name:"dbport" description:"Set the http server port." default:"8080"`
+	Port     string `name:"dbport" description:"Set the http server port." default:"3000"`
 	User     string `name:"dbuser" description:"Set the database user."`
 	Password string `name:"dbpassword" description:"Set the database password."`
 	Dialect  string `name:"dbdialect" description:"Set the database dialect." default:"sqlite"`
