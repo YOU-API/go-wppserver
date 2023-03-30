@@ -514,15 +514,28 @@ func ScrapingPhones(db *sql.DB, ds *whatsapp.Devices, w http.ResponseWriter, r *
 	}
 
 	type checkPhones struct {
-		Phones []string `json:"phones"`
+		Phones []string
 	}
 
 	phones := checkPhones{}
 	decoder := json.NewDecoder(r.Body)
-
-	if err := decoder.Decode(&phones); err != nil {
+	if err := decoder.Decode(&phones.Phones); err != nil {
 		respondError(w, http.StatusBadRequest, err.Error())
 		return
+	}
+
+	// get all contacts to compare
+	allContacts := make(map[string]types.ContactInfo)
+	checkContacts, err := device.Client.Store.Contacts.GetAllContacts()
+	for cjid, cdata := range checkContacts {
+		cphoneNumber := strings.Split(cjid.String(), "@")[0]
+		cphoneNumber = strings.Split(cphoneNumber, ".")[0]
+
+		for _, phone := range phones.Phones {
+			if phone == cphoneNumber {
+				allContacts[phone] = cdata
+			}
+		}
 	}
 
 	isOnWhatsapp, err := device.Client.IsOnWhatsApp(phones.Phones)
@@ -566,13 +579,18 @@ func ScrapingPhones(db *sql.DB, ds *whatsapp.Devices, w http.ResponseWriter, r *
 			InWhatsapp: true,
 		}
 
-		cdata, err := device.Client.Store.Contacts.GetContact(jid)
-		finfo.IsContact = cdata.Found
-		if finfo.IsContact {
-			finfo.PessoalName = cdata.PushName
-			finfo.BusinessName = cdata.BusinessName
-		} else if userInfo.VerifiedName != nil {
-			finfo.PessoalName = userInfo.VerifiedName.Details.GetVerifiedName()
+		for cphoneNumber, cdata := range allContacts {
+			if cphoneNumber == finfo.Phone {
+				finfo.IsContact = true
+				finfo.PessoalName = cdata.PushName
+				finfo.BusinessName = cdata.BusinessName
+			}
+		}
+
+		if !finfo.IsContact {
+			if userInfo.VerifiedName != nil {
+				finfo.PessoalName = userInfo.VerifiedName.Details.GetVerifiedName()
+			}
 		}
 
 		picture, err := device.Client.GetProfilePictureInfo(jid, nil)
@@ -610,7 +628,14 @@ func GetContacts(db *sql.DB, ds *whatsapp.Devices, w http.ResponseWriter, r *htt
 		return
 	}
 
-	response := []model.PhoneInfo{}
+	type Response struct {
+		Data []model.PhoneInfo
+	}
+
+	var checkPhones []string
+	var wpRegisteredPhones []string
+
+	response := Response{}
 	for cjid, cdata := range result {
 		phoneNumber := strings.Split(cjid.String(), "@")[0]
 		phoneNumber = strings.Split(phoneNumber, ".")[0]
@@ -619,6 +644,7 @@ func GetContacts(db *sql.DB, ds *whatsapp.Devices, w http.ResponseWriter, r *htt
 			Phone:        phoneNumber,
 			PessoalName:  cdata.PushName,
 			BusinessName: cdata.BusinessName,
+			IsContact:    true,
 		}
 
 		picture, err := device.Client.GetProfilePictureInfo(cjid, nil)
@@ -626,10 +652,34 @@ func GetContacts(db *sql.DB, ds *whatsapp.Devices, w http.ResponseWriter, r *htt
 			cinfo.PictureURL = picture.URL
 		}
 
-		response = append(response, cinfo)
+		response.Data = append(response.Data, cinfo)
+		checkPhones = append(checkPhones, cjid.String())
 	}
 
-	respondJSON(w, http.StatusOK, response)
+	// check is on whatsapp
+	isOnWhatsapp, err := device.Client.IsOnWhatsApp(checkPhones)
+	if err != nil {
+		respondError(w, http.StatusInternalServerError, "")
+		return
+	}
+
+	// process whatsapp registered phones and jids
+	for _, item := range isOnWhatsapp {
+		if item.IsIn {
+			phoneNumber := strings.Split(item.JID.String(), "@")[0]
+			phoneNumber = strings.Split(phoneNumber, ".")[0]
+			wpRegisteredPhones = append(wpRegisteredPhones, phoneNumber)
+		}
+	}
+	// update response whit whatsapp registered phones
+	for i := 0; i < len(response.Data); i++ {
+		for _, item := range wpRegisteredPhones {
+			if item == response.Data[i].Phone {
+				response.Data[i].InWhatsapp = true
+			}
+		}
+	}
+	respondJSON(w, http.StatusOK, response.Data)
 	return
 }
 
