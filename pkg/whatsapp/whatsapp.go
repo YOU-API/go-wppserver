@@ -6,6 +6,8 @@ import (
 	"wppserver/pkg/config"
 
 	_ "github.com/go-sql-driver/mysql"
+	_ "github.com/lib/pq"
+	
 	uuid "github.com/google/uuid"
 	_ "github.com/mdp/qrterminal/v3"
 	_ "github.com/skip2/go-qrcode"

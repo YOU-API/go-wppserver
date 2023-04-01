@@ -141,9 +141,11 @@ func GetRequestAuth(db *sql.DB, r *http.Request) (model.Auth, bool) {
 		reqToken = splitToken[1]
 	}
 	userAuthorization, okGetUserFromClaims := GetUserFromClaims(reqToken, db)
+	if !okGetUserFromClaims {
+		return auth, false
+	}
 	scopeAuthorization, okGetScopesFromClaims := GetScopeFromClaims(reqToken, db)
-
-	if !okGetUserFromClaims || !okGetScopesFromClaims {
+	if !okGetScopesFromClaims {
 		return auth, false
 	}
 
@@ -170,7 +172,7 @@ func GetUserFromClaims(reqToken string, db *sql.DB) (model.User, bool) {
 		&user.Id, &user.Name, &user.Email, &user.Password, &user.Type, &user.Status)
 
 	if err != nil {
-		log.Panicf("query error: %v\n", err)
+		log.Printf("query error: %v\n", err)
 		return user, false
 	}
 
