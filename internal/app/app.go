@@ -14,6 +14,8 @@ import (
 	"wppserver/pkg/whatsapp"
 
 	_ "github.com/go-sql-driver/mysql"
+	_ "github.com/lib/pq"
+
 	"github.com/google/uuid"
 	"github.com/gorilla/mux"
 	_ "modernc.org/sqlite"
@@ -125,8 +127,15 @@ func (a *App) DatabaseSetup(config *config.Config) (*sql.DB, error) {
 
 // Connect devices saved in DB
 func (a *App) connectDevices() {
-	log.Printf("Init connection to Whatsapp")
 
+	if _, err := http.Get("http://clients3.google.com/generate_204"); err != nil {
+		log.Printf("No internet connection found. Restarting after 10 seconds")
+		time.Sleep(10 * time.Second)
+		a.connectDevices()
+		return
+	}
+
+	log.Printf("Init connection to Whatsapp")
 	rows, err := a.DB.Query("SELECT id, userid, jid, connected FROM wppserver_devices WHERE connected='yes'")
 	if err != nil {
 		log.Fatalf("query error: %v\n", err)

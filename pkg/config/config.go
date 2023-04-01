@@ -21,8 +21,9 @@ type DataBase struct {
 	Port     string `name:"dbport" description:"Set the http server port." default:"3000"`
 	User     string `name:"dbuser" description:"Set the database user."`
 	Password string `name:"dbpassword" description:"Set the database password."`
+	Name     string `name:"dbname" description:"Set the database name."`
 	Dialect  string `name:"dbdialect" description:"Set the database dialect." default:"sqlite"`
-	DbURI    string `name:"dburi" description:"Set the database dialect." default:"file:dbdata/wppserver.db?_foreign_keys=on"`
+	DbURI    string `name:"dburi" description:"Set the database local uri." default:"file:dbdata/wppserver.db?_foreign_keys=on"`
 }
 
 type Server struct {
@@ -60,6 +61,7 @@ func GetConfig(input ...string) *Config {
 		DB: DataBase{
 			Host:     os.Getenv("DATABASE_HOST"),
 			Port:     os.Getenv("DATABASE_PORT"),
+			Name:     os.Getenv("DATABASE_NAME"),
 			Dialect:  os.Getenv("DATABASE_TYPE"),
 			DbURI:    os.Getenv("DATABASE_URI"),
 			User:     os.Getenv("DATABASE_USER"),
