@@ -1,7 +1,7 @@
 var spec =
 {
   "info": {
-    "title": "YOU WPPSERVER API",
+    "title": "WPPSERVER",
     "version": "1.0.0",
     "description": "WPPSERVER is an unofficial WhatsApp API server, which is a software programming platform created by third parties that allows developers to integrate WhatsApp into their existing applications or systems. This API offers a wide range of features and functionalities, including the ability to send and receive messages, images and documents, obtain user profile information and more.",
     "contact": {
