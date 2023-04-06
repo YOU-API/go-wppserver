@@ -1,9 +1,9 @@
 var spec =
 {
   "info": {
-    "title": "WPPSERVER",
+    "title": "WppServer - Send Messages with WhatsApp API",
     "version": "1.0.0",
-    "description": "WPPSERVER is an unofficial WhatsApp API server, which is a software programming platform created by third parties that allows developers to integrate WhatsApp into their existing applications or systems. This API offers a wide range of features and functionalities, including the ability to send and receive messages, images and documents, obtain user profile information and more.",
+    "description": "WppServer is an unofficial WhatsApp API server, which is a software programming platform created by third parties that allows developers to integrate WhatsApp into their existing applications or systems. This API offers a wide range of features and functionalities, including the ability to send and receive messages, images and documents, obtain user profile information and more. <br><br> Make sure you have a user. When starting the server for the first time, you can set up an initial email and password for the administrator user through the <code>.env</code> file. Alternatively, you can also use the <a href='#/User/post_user'>user</a> endpoint to register a new user via API. After having a user, it's necessary to provide the email and password in the <a href='#/Auth/post_auth'>auth</a> route to obtain an access token and thus perform the other operations in the API",
     "contact": {
       "email": "williansantanami@gmail.com"
     }
