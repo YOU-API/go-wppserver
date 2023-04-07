@@ -103,7 +103,7 @@ func RegisterUser(db *sql.DB, w http.ResponseWriter, r *http.Request, config *co
 		&user.Id, &user.Name, &user.Email, &user.Type, &user.Status)
 
 	if err != nil || err == sql.ErrNoRows {
-		log.Fatalf("query error: %v\n", err)
+		log.Printf("query error: %v\n", err)
 		respondError(w, http.StatusBadRequest, err.Error())
 		return
 	}
